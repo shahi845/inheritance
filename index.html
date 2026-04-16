@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Inheritance Calculator (Fara'id)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>inheritance<span>.calculated</span></h1>
+            <p>Precise Islamic Estate Distribution (Fara'id)</p>
+            <div class="header-controls">
+                <select id="currency-selector" class="currency-selector" aria-label="Select Currency">
+                    <option value="AFN" data-symbol="؋">؋ AFN</option>
+                    <option value="ALL" data-symbol="L">L ALL</option>
+                    <option value="DZD" data-symbol="جد">جد DZD</option>
+                    <option value="AOA" data-symbol="Kz">Kz AOA</option>
+                    <option value="ARS" data-symbol="$">$ ARS</option>
+                    <option value="AUD" data-symbol="A$">A$ AUD</option>
+                    <option value="AZN" data-symbol="₼">₼ AZN</option>
+                    <option value="BSD" data-symbol="B$">B$ BSD</option>
+                    <option value="BHD" data-symbol=".ب.د">.ب.د BHD</option>
+                    <option value="BDT" data-symbol="৳">৳ BDT</option>
+                    <option value="BBD" data-symbol="Bds$">Bds$ BBD</option>
+                    <option value="BYN" data-symbol="Br">Br BYN</option>
+                    <option value="BZD" data-symbol="BZ$">BZ$ BZD</option>
+                    <option value="BTN" data-symbol="Nu.">Nu. BTN</option>
+                    <option value="BOB" data-symbol="Bs.">Bs. BOB</option>
+                    <option value="BAM" data-symbol="KM">KM BAM</option>
+                    <option value="BWP" data-symbol="P">P BWP</option>
+                    <option value="BRL" data-symbol="R$">R$ BRL</option>
+                    <option value="GBP" data-symbol="£">£ GBP</option>
+                    <option value="EUR" data-symbol="€">€ EUR</option>
+                    <option value="CAD" data-symbol="C$">C$ CAD</option>
+                    <option value="CNY" data-symbol="¥">¥ CNY</option>
+                    <option value="CZK" data-symbol="Kč">Kč CZK</option>
+                    <option value="DKK" data-symbol="kr">kr DKK</option>
+                    <option value="XCD" data-symbol="EC$">EC$ XCD</option>
+                    <option value="EGP" data-symbol="£">£ EGP</option>
+                    <option value="FJD" data-symbol="$">$ FJD</option>
+                    <option value="GEL" data-symbol="₾">₾ GEL</option>
+                    <option value="HUF" data-symbol="Ft">Ft HUF</option>
+                    <option value="INR" data-symbol="₹">₹ INR</option>
+                    <option value="IDR" data-symbol="Rp">Rp IDR</option>
+                    <option value="ILS" data-symbol="₪">₪ ILS</option>
+                    <option value="JPY" data-symbol="¥">¥ JPY</option>
+                    <option value="KRW" data-symbol="₩">₩ KRW</option>
+                    <option value="KWD" data-symbol="KD">KD KWD</option>
+                    <option value="MYR" data-symbol="RM">RM MYR</option>
+                    <option value="MXN" data-symbol="$">$ MXN</option>
+                    <option value="NPR" data-symbol="₨">₨ NPR</option>
+                    <option value="NZD" data-symbol="NZ$">NZ$ NZD</option>
+                    <option value="NOK" data-symbol="kr">kr NOK</option>
+                    <option value="PKR" data-symbol="₨">₨ PKR</option>
+                    <option value="PEN" data-symbol="S/">S/ PEN</option>
+                    <option value="PHP" data-symbol="₱">₱ PHP</option>
+                    <option value="PLN" data-symbol="zł">zł PLN</option>
+                    <option value="QAR" data-symbol="ر.ق">ر.ق QAR</option>
+                    <option value="RON" data-symbol="lei">lei RON</option>
+                    <option value="RUB" data-symbol="₽">₽ RUB</option>
+                    <option value="SAR" data-symbol="ر.س">ر.س SAR</option>
+                    <option value="SGD" data-symbol="S$">S$ SGD</option>
+                    <option value="ZAR" data-symbol="R">R ZAR</option>
+                    <option value="LKR" data-symbol="₨">₨ LKR</option>
+                    <option value="SEK" data-symbol="kr">kr SEK</option>
+                    <option value="CHF" data-symbol="CHF">CHF CHF</option>
+                    <option value="THB" data-symbol="฿">฿ THB</option>
+                    <option value="TTD" data-symbol="TT$">TT$ TTD</option>
+                    <option value="TRY" data-symbol="₺">₺ TRY</option>
+                    <option value="UAH" data-symbol="₴">₴ UAH</option>
+                    <option value="AED" data-symbol="د.إ">د.إ AED</option>
+                    <option value="USD" data-symbol="$">$ USD</option>
+                    <option value="UYU" data-symbol="$">$ UYU</option>
+                    <option value="VND" data-symbol="₫">₫ VND</option>
+                    <option value="XOF" data-symbol="CFA">CFA XOF</option>
+                    <option value="YER" data-symbol="﷼">﷼ YER</option>
+                    <option value="ZMW" data-symbol="ZK">ZK ZMW</option>
+                </select>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-icon">☀️</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section class="input-section glass-panel">
+                <h2>Estate Assets</h2>
+
+                <div class="form-group">
+                    <label for="savings">Savings / Cash</label>
+                    <div class="input-wrapper currency-input">
+                        <span>$</span>
+                        <input type="number" id="savings" class="asset-input" placeholder="e.g. 30000" min="0"
+                            value="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="business">Business Value</label>
+                    <div class="input-wrapper currency-input">
+                        <span>$</span>
+                        <input type="number" id="business" class="asset-input" placeholder="e.g. 50000" min="0"
+                            value="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Land / Property</label>
+                    <div class="land-inputs">
+                        <div class="land-row">
+                            <input type="number" id="land-cents" class="asset-input" placeholder="Cents" min="0"
+                                value="0" step="0.01">
+                            <span class="unit-label">cents @</span>
+                            <div class="input-wrapper currency-input-small">
+                                <span>$</span>
+                                <input type="number" id="land-cents-rate" class="asset-input" placeholder="per cent"
+                                    min="0" value="0">
+                            </div>
+                        </div>
+                        <div class="land-row">
+                            <input type="number" id="land-acres" class="asset-input" placeholder="Acres" min="0"
+                                value="0" step="0.01">
+                            <span class="unit-label">acres @</span>
+                            <div class="input-wrapper currency-input-small">
+                                <span>$</span>
+                                <input type="number" id="land-acres-rate" class="asset-input" placeholder="per acre"
+                                    min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="other">Other Assets</label>
+                    <div class="input-wrapper currency-input">
+                        <span>$</span>
+                        <input type="number" id="other" class="asset-input" placeholder="e.g. 20000" min="0" value="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="funeral">Funeral Expenses</label>
+                    <div class="input-wrapper currency-input">
+                        <span>$</span>
+                        <input type="number" id="funeral" class="asset-input" placeholder="e.g. 5000" min="0" value="0">
+                    </div>
+                </div>
+
+                <div class="net-estate-display">
+                    <span class="net-label">Net Estate for Distribution:</span>
+                    <span class="net-value" id="net-estate">$0.00</span>
+                </div>
+
+
+                <div class="form-group toggle-group">
+                    <label>Deceased Gender</label>
+                    <div class="gender-toggle">
+                        <input type="radio" name="gender" id="male" value="male" checked>
+                        <label for="male" class="toggle-btn">Male</label>
+
+                        <input type="radio" name="gender" id="female" value="female">
+                        <label for="female" class="toggle-btn">Female</label>
+                    </div>
+                </div>
+
+                <h2>Surviving Heirs</h2>
+                <div id="heirs-container">
+                    <!-- Javascript will inject heir controls here -->
+                </div>
+
+                <button id="calculate-btn" class="primary-btn">Calculate Distribution</button>
+            </section>
+
+            <section class="results-section glass-panel hidden" id="results-panel">
+                <h2>Distribution Summary</h2>
+                <div class="chart-container" id="chart-container">
+                    <!-- Visual chart will go here -->
+                </div>
+                <div class="table-wrapper">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Heir</th>
+                                <th>Share</th>
+                                <th>Percentage</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Results rows -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="notes-container" class="notes-container"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Based on Sharia Fara'id rules. Consult a scholar for complex cases.</p>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
