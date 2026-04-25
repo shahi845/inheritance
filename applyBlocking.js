@@ -7,16 +7,15 @@ export function applyBlocking(heirs, context) {
     for (const heir in blockingRules) {
         blocked[heir] = blockingRules[heir]({ heirs, context });
         if (blocked[heir] && heirs[heir] > 0) {
-            context.messages.push(`${capitalize(heir)} is blocked by ${blockingReasons[heir] || 'closer relatives'}.`);
+            let name = capitalize(heir);
+            if (heir === 'paternalUncleSon') name = "Son of Paternal Uncle";
+            if (heir === 'sonOfFullBrother') name = "Son of Full Brother";
+            if (heir === 'sonOfPaternalBrother') name = "Son of Paternal Half-Brother";
+            
+            context.messages.push(`Blocked: ${name} is blocked by ${blockingReasons[heir] || 'closer relatives'}.`);
         }
     }
     
-    // special logic for maternal sisters combined
-    if (!blocked.maternalBrother && blocked.maternalSister && heirs.maternalBrother > 0 && heirs.maternalSister > 0) {
-        // if maternal sister is blocked, it means they are both blocked if blocked by descendants.
-        // The original logic just grouped them. We handled this in fixedShareRules.
-    }
-
     context.blocked = blocked;
     return blocked;
 }

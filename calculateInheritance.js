@@ -7,6 +7,7 @@ import { applyAwl } from './applyAwl.js';
 import { assignResiduaries } from './assignResiduaries.js';
 import { applyRadd } from './applyRadd.js';
 import { capitalize } from '../utils/formatResults.js';
+import { blockingReasons } from '../data/shafiiRules.js';
 
 export function calculateInheritance(rawInput) {
     const heirs = normalizeInput(rawInput);
@@ -27,14 +28,19 @@ export function calculateInheritance(rawInput) {
 
     for (const key in heirs) {
         if (heirs[key] > 0 && context.blocked[key]) {
+            let name = capitalize(key);
+            if (key === 'paternalUncleSon') name = "Son of Paternal Uncle";
+            if (key === 'sonOfFullBrother') name = "Son of Full Brother";
+            if (key === 'sonOfPaternalBrother') name = "Son of Paternal Half-Brother";
+
             shares.push({
                 heir: key,
-                name: capitalize(key),
+                name: name,
                 count: heirs[key],
                 baseShare: { num: 0, den: 1 },
                 adjustedShare: { num: 0, den: 1 },
                 status: 'Blocked',
-                reason: ''
+                reason: `Blocked by ${blockingReasons[key] || 'closer relatives'}`
             });
         }
     }

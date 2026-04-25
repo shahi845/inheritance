@@ -8,12 +8,10 @@ export function normalizeInput(raw) {
             if (isNaN(val) || val < 0) val = 0;
             
             // Apply clamps
-            if (key === 'husband' || key === 'father' || key === 'grandfather' || key === 'mother') {
+            if (key === 'husband' || key === 'father' || key === 'grandfather' || key === 'mother' || key === 'maternalGrandmother' || key === 'paternalGrandmother') {
                 val = Math.min(val, 1);
             } else if (key === 'wife') {
                 val = Math.min(val, 4);
-            } else if (key === 'grandmother') {
-                val = Math.min(val, 2);
             }
             heirs[key] = val;
         }

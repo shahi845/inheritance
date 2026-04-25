@@ -4,9 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Islamic Inheritance (Fara'id) Calculator</title>
+    <title>Shāfiʿī Islamic Inheritance (Fara'id) Calculator</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .disclaimer {
+            font-size: 0.9rem;
+            color: #fbbf24; /* warning yellow */
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+        .debug-toggle {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,8 +31,9 @@
 
     <div class="container">
         <header>
-            <h1>Fara'id Calculator</h1>
-            <p>Calculate Islamic inheritance shares according to Qur'anic rules.</p>
+            <h1>Shāfiʿī Fara'id Calculator</h1>
+            <p>Calculate Islamic inheritance shares based on Shāfiʿī Farā’iḍ methodology.</p>
+            <p class="disclaimer"><i class="fas fa-exclamation-triangle"></i> Educational tool only. Please verify real inheritance cases with qualified scholars.</p>
         </header>
 
         <main>
@@ -27,6 +42,11 @@
                 <div class="input-group">
                     <label for="estateValue">Total Estate Amount (Optional):</label>
                     <input type="number" id="estateValue" min="0" placeholder="e.g., 100000">
+                </div>
+                
+                <div class="debug-toggle">
+                    <input type="checkbox" id="scholarMode">
+                    <label for="scholarMode">Scholar Mode (Show Calculation Steps)</label>
                 </div>
             </section>
 
@@ -58,8 +78,16 @@
                         <input type="number" id="brother" min="0" value="0">
                     </div>
                     <div class="input-group">
+                        <label for="sonOfFullBrother">Sons of Full Brother</label>
+                        <input type="number" id="sonOfFullBrother" min="0" value="0">
+                    </div>
+                    <div class="input-group">
                         <label for="paternalBrother">Paternal Half-Brothers</label>
                         <input type="number" id="paternalBrother" min="0" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="sonOfPaternalBrother">Sons of Paternal Half-Brother</label>
+                        <input type="number" id="sonOfPaternalBrother" min="0" value="0">
                     </div>
                     <div class="input-group">
                         <label for="maternalBrother">Maternal Half-Brothers</label>
@@ -68,6 +96,10 @@
                     <div class="input-group">
                         <label for="uncle">Paternal Uncles</label>
                         <input type="number" id="uncle" min="0" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="paternalUncleSon">Sons of Paternal Uncle</label>
+                        <input type="number" id="paternalUncleSon" min="0" value="0">
                     </div>
                 </section>
 
@@ -82,8 +114,12 @@
                         <input type="number" id="mother" min="0" max="1" value="0">
                     </div>
                     <div class="input-group">
-                        <label for="grandmother">Grandmother (0, 1, or 2)</label>
-                        <input type="number" id="grandmother" min="0" max="2" value="0">
+                        <label for="maternalGrandmother">Maternal Grandmother (0 or 1)</label>
+                        <input type="number" id="maternalGrandmother" min="0" max="1" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="paternalGrandmother">Paternal Grandmother (0 or 1)</label>
+                        <input type="number" id="paternalGrandmother" min="0" max="1" value="0">
                     </div>
                     <div class="input-group">
                         <label for="daughter">Daughters</label>
@@ -127,6 +163,7 @@
                                 <th>Total Fraction</th>
                                 <th>Per Person %</th>
                                 <th>Per Person Amount</th>
+                                <th>Reason</th>
                             </tr>
                         </thead>
                         <tbody id="resultsBody">
@@ -134,7 +171,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="messages" class="messages-container"></div>
+                <div id="messages" class="messages-container hidden"></div>
             </section>
         </main>
     </div>

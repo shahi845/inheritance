@@ -16,12 +16,19 @@ export function assignFixedShares(heirs, context) {
                     name = 'Maternal Sibling(s)';
                 } else if (ruleKey === 'paternalSister') {
                     name = 'Paternal Half-Sister';
+                } else if (ruleKey === 'grandmothers') {
+                    name = 'Grandmother(s)';
                 }
                 
                 let count = heirs[ruleKey] || 1;
                 if (ruleKey === 'maternalSiblings') {
                     count = heirs.maternalBrother + heirs.maternalSister;
+                } else if (ruleKey === 'grandmothers') {
+                    count = (heirs.maternalGrandmother && !context.blocked.maternalGrandmother ? 1 : 0) + 
+                            (heirs.paternalGrandmother && !context.blocked.paternalGrandmother ? 1 : 0);
                 }
+
+                const reason = rule.reason ? rule.reason({ heirs, context }) : '';
 
                 shares.push({
                     heir: ruleKey,
@@ -30,8 +37,10 @@ export function assignFixedShares(heirs, context) {
                     baseShare: frac,
                     adjustedShare: frac,
                     status: 'Sharer',
-                    reason: ''
+                    reason: reason
                 });
+                
+                context.messages.push(`Assigned ${name} ${frac.num}/${frac.den} due to: ${reason}`);
 
                 sumFractions = addFractions(sumFractions, frac);
             }

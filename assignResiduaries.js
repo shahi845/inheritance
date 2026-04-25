@@ -24,8 +24,10 @@ export function assignResiduaries(shares, heirs, sumFractions, context) {
                     count: maleCount,
                     baseShare: fraction(remainder.num * maleUnits, remainder.den * totalUnits),
                     adjustedShare: fraction(remainder.num * maleUnits, remainder.den * totalUnits),
-                    status: 'Residuary'
+                    status: 'Residuary',
+                    reason: femaleCount > 0 ? "Residuary (Takes remainder, 2:1 ratio male/female)" : "Residuary (Takes remainder)"
                 });
+                context.messages.push(`Assigned ${maleName} as Residuary.`);
             }
             if (femaleCount > 0) {
                 shares.push({
@@ -34,9 +36,10 @@ export function assignResiduaries(shares, heirs, sumFractions, context) {
                     count: femaleCount,
                     baseShare: fraction(remainder.num * femaleUnits, remainder.den * totalUnits),
                     adjustedShare: fraction(remainder.num * femaleUnits, remainder.den * totalUnits),
-                    status: 'Residuary'
+                    status: 'Residuary',
+                    reason: "Residuary (Takes remainder, 2:1 ratio male/female)"
                 });
-                context.messages.push(`Rule applied: Male gets double the female share (Each ${maleName} = 2 shares, Each ${femaleName} = 1 share).`);
+                context.messages.push(`Assigned ${femaleName} as Residuary.`);
             }
             return true;
         }
@@ -58,6 +61,8 @@ export function assignResiduaries(shares, heirs, sumFractions, context) {
             existing.status = 'Sharer + Residuary';
             existing.baseShare = addFractions(existing.baseShare, remainder);
             existing.adjustedShare = existing.baseShare;
+            existing.reason += " + Residuary (Takes remainder)";
+            context.messages.push(`Father acts as Residuary and takes remainder.`);
         } else {
             shares.push({
                 heir: 'father',
@@ -65,8 +70,10 @@ export function assignResiduaries(shares, heirs, sumFractions, context) {
                 count: 1,
                 baseShare: remainder,
                 adjustedShare: remainder,
-                status: 'Residuary'
+                status: 'Residuary',
+                reason: "Residuary (Takes remainder)"
             });
+            context.messages.push(`Assigned Father as Residuary.`);
         }
         return shares;
     }
@@ -77,6 +84,8 @@ export function assignResiduaries(shares, heirs, sumFractions, context) {
             existing.status = 'Sharer + Residuary';
             existing.baseShare = addFractions(existing.baseShare, remainder);
             existing.adjustedShare = existing.baseShare;
+            existing.reason += " + Residuary (Takes remainder)";
+            context.messages.push(`Grandfather acts as Residuary and takes remainder.`);
         } else {
             shares.push({
                 heir: 'grandfather',
@@ -84,39 +93,69 @@ export function assignResiduaries(shares, heirs, sumFractions, context) {
                 count: 1,
                 baseShare: remainder,
                 adjustedShare: remainder,
-                status: 'Residuary'
+                status: 'Residuary',
+                reason: "Residuary (Takes remainder)"
             });
+            context.messages.push(`Assigned Grandfather as Residuary.`);
         }
         return shares;
     }
 
-    // 3. Siblings
-    if ((heirs.brother > 0 || heirs.sister > 0) && !context.blocked.brother) {
-        if (heirs.brother > 0) {
-            if (addResiduaryShares('brother', 'sister', 'Full Brother', 'Full Sister (with Brother)')) return shares;
-        } else if (heirs.sister > 0 && context.hasFemaleDescendants) {
-            shares.push({
-                heir: 'sister',
-                name: 'Full Sister (with Descendants)',
-                count: heirs.sister,
-                baseShare: remainder,
-                adjustedShare: remainder,
-                status: 'Residuary'
-            });
-            return shares;
+    // 3. Siblings and Extended
+    for (let i = 4; i < residuaryPriority.length; i++) {
+        let maleKey = residuaryPriority[i];
+        if (heirs[maleKey] > 0 && !context.blocked[maleKey]) {
+            if (maleKey === 'brother') {
+                if (addResiduaryShares('brother', 'sister', 'Full Brother', 'Full Sister (with Brother)')) return shares;
+            } else if (maleKey === 'paternalBrother') {
+                if (addResiduaryShares('paternalBrother', 'paternalSister', 'Paternal Half-Brother', 'Paternal Half-Sister (with Brother)')) return shares;
+            } else {
+                let name = maleKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                if (maleKey === 'sonOfFullBrother') name = "Son of Full Brother";
+                if (maleKey === 'sonOfPaternalBrother') name = "Son of Paternal Half-Brother";
+                if (maleKey === 'paternalUncleSon') name = "Son of Paternal Uncle";
+
+                shares.push({
+                    heir: maleKey,
+                    name: name,
+                    count: heirs[maleKey],
+                    baseShare: remainder,
+                    adjustedShare: remainder,
+                    status: 'Residuary',
+                    reason: "Residuary (Takes remainder)"
+                });
+                context.messages.push(`Assigned ${name} as Residuary.`);
+                return shares;
+            }
         }
     }
-    
-    // 4. Uncles
-    if (heirs.uncle > 0 && !context.blocked.uncle) {
+
+    // Sisters with descendants
+    if (heirs.sister > 0 && !context.blocked.sister && context.hasFemaleDescendants) {
         shares.push({
-            heir: 'uncle',
-            name: 'Paternal Uncle',
-            count: heirs.uncle,
+            heir: 'sister',
+            name: 'Full Sister (with Descendants)',
+            count: heirs.sister,
             baseShare: remainder,
             adjustedShare: remainder,
-            status: 'Residuary'
+            status: 'Residuary',
+            reason: "Residuary with others (takes remainder due to female descendants)"
         });
+        context.messages.push(`Assigned Full Sister as Residuary with others.`);
+        return shares;
+    }
+    
+    if (heirs.paternalSister > 0 && !context.blocked.paternalSister && context.hasFemaleDescendants) {
+        shares.push({
+            heir: 'paternalSister',
+            name: 'Paternal Half-Sister (with Descendants)',
+            count: heirs.paternalSister,
+            baseShare: remainder,
+            adjustedShare: remainder,
+            status: 'Residuary',
+            reason: "Residuary with others (takes remainder due to female descendants)"
+        });
+        context.messages.push(`Assigned Paternal Half-Sister as Residuary with others.`);
         return shares;
     }
 
